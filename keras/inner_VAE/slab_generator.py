@@ -32,16 +32,21 @@ class Sampling(layers.Layer):
 
 
 """
+## initialize Weights
+"""
+initializer = initializers.GlorotUniform(seed = None)
+
+"""
 ## Build the encoder
 """
 
 latent_dim = 2
 
 encoder_inputs = keras.Input(shape=(64, 64, 1))
-x = Conv2D(filters = 64, kernel_size = 3, activation = LeakyReLU(alpha = 0.2), strides = [1,1,2,1], padding = "same")(encoder_inputs)
-x = Conv2D(filters = 64, kernel_size = 3, activation = LeakyReLU(alpha = 0.2), strides = [1,1,2,1], padding = "same")(x)
-x = Conv2D(filters = 64, kernel_size = 3, activation = LeakyReLU(alpha = 0.2), strides = [1,1,2,1], padding = "same")(x)
-x = Conv2D(filters = 64, kernel_size = 3, activation = LeakyReLU(alpha = 0.2), strides = [1,1,2,1], padding = "same")(x)
+x = Conv2D(filters = 64, kernel_size = 3, activation = LeakyReLU(alpha = 0.2), strides = [1,1,2,1], padding = "same", kernel_initializer = 'glorot_uniform')(encoder_inputs)
+x = Conv2D(filters = 64, kernel_size = 3, activation = LeakyReLU(alpha = 0.2), strides = [1,1,2,1], padding = "same", kernel_initializer = 'glorot_uniform')(x)
+x = Conv2D(filters = 64, kernel_size = 3, activation = LeakyReLU(alpha = 0.2), strides = [1,1,2,1], padding = "same", kernel_initializer = 'glorot_uniform')(x)
+x = Conv2D(filters = 64, kernel_size = 3, activation = LeakyReLU(alpha = 0.2), strides = [1,1,2,1], padding = "same", kernel_initializer = 'glorot_uniform')(x)
 x = Dense(x)
 x = tf.matmul()
 z_mean = Dense(latent_dim, name="z_mean")(x)
@@ -52,26 +57,16 @@ encoder.summary()
 
 
 """
-## set a mapping function
-"""
-def mapping(inputs):
-	with tf.compat.v1.variable_scope("map"):
-		m_1 = tf.matmul(inputs, weights['wm1'])
-		m_1 = tf.nn.tanh(m_1)
-
-		m_2 = tf.matmul(m_1, weights['wm2'])
-	return m_2
-
-"""
 ## Build the decoder
 """
 
 latent_inputs = keras.Input(shape=(latent_dim,))
 x = tf.matmul(inputs, weights)
 x = LeakyReLU(alpha = 0.2)
-x = Conv2DTranspose(filters = , kernel_size = , activation = LeakyReLU(alpha = 0.2), strides = , padding = "same")(latent_inputs)
-x = Conv2DTranspose(filters = , kernel_size = , activation = LeakyReLU(alpha = 0.2), strides = , padding = "same")(x)
-x = Conv2DTranspose(filters = , kernel_size = , activation = LeakyReLU(alpha = 0.2), strides = , padding = "same")(x)
+x = tf.reshape(x, tf.stack([20,1,25,50]))
+x = Conv2DTranspose(filters = 64, kernel_size = 1, activation = LeakyReLU(alpha = 0.2), strides = [1], padding = "same")(latent_inputs)
+x = Conv2DTranspose(filters = 64, kernel_size = 1, activation = LeakyReLU(alpha = 0.2), strides = [], padding = "same")(x)
+x = Conv2DTranspose(filters = 64, kernel_size = 1, activation = LeakyReLU(alpha = 0.2), strides = [], padding = "same")(x)
 decoder_outputs = Conv2DTranspose(1, 3, activation="tanh", padding="same")(x)
 decoder = keras.Model(latent_inputs, decoder_outputs, name="decoder")
 decoder.summary()
