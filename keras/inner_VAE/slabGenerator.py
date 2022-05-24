@@ -122,7 +122,7 @@ class VAE(keras.Model):
 ## Train the VAE
 """
 
-(x_train, _), (x_test, _) = keras.datasets.mnist.load_data()
+(x_train, _), (x_test, _) = 
 mnist_digits = np.concatenate([x_train, x_test], axis=0)
 mnist_digits = np.expand_dims(mnist_digits, -1).astype("float32") / 255
 
@@ -189,7 +189,7 @@ def plot_label_clusters(vae, data, labels):
     plt.show()
 
 
-(x_train, y_train), _ = keras.datasets.mnist.load_data()
+(x_train, y_train), _ = 
 x_train = np.expand_dims(x_train, -1).astype("float32") / 255
 
 plot_label_clusters(vae, x_train, y_train)
