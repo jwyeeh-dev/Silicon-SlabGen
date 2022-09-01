@@ -56,10 +56,10 @@ class Decoder(nn.Module):
         x = torch.tanh(x)
         return x
 
-
-class FormationEnergyClassifier(nn.Module):
+# MLP process
+class IonizationEnergyClassifier(nn.Module):
     def __init__(self, z_size=None):
-        super(FormationEnergyClassifier, self).__init__()
+        super(IonizationEnergyClassifier, self).__init__()
         self.fc = nn.Linear(z_size, 500)
         self.out = nn.Linear(500, 1)
 
@@ -77,7 +77,7 @@ class MaterialGenerator(nn.Module):
         self.leak_value = leak_value
         self.encoder = Encoder(z_size, leak_value)
         self.decoder = Decoder(z_size, leak_value)
-        self.classifier = FormationEnergyClassifier(z_size)
+        self.classifier = IonizationEnergyClassifier(z_size)
 
     def sampling(self, x):
         mean, log_var = self.encoder(x)

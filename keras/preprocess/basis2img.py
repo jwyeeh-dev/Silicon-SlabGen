@@ -13,7 +13,6 @@ from tqdm import tqdm
 from joblib import Parallel, delayed
 import multiprocessing
 import pickle
-import tensorflow as tf
 from numba import jit, cuda
 
 
